@@ -1,0 +1,35 @@
+# 실제 데이터 (대용량, 공개 불가)
+data/raw/
+data/processed/
+
+# 학습된 모델 (재생성 가능)
+results/*.pt
+results/*.pkl
+
+# 파이썬
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# 주피터
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# 환경
+.env
+.venv
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.cursor/
+.vscode/

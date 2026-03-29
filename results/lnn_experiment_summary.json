@@ -1,0 +1,19 @@
+{
+  "convergence": {
+    "LNN_final_auc_mean": 1.0,
+    "LSTM_final_auc_mean": 1.0,
+    "LNN_epoch_to_90pct": 2,
+    "LSTM_epoch_to_90pct": 1
+  },
+  "early_detection": {
+    "seq_3_LNN": 1.0,
+    "seq_3_LSTM": 1.0,
+    "seq_6_LNN": 1.0,
+    "seq_6_LSTM": 1.0
+  },
+  "irregularity": {
+    "high_irr_LNN": 1.0,
+    "high_irr_LSTM": 1.0,
+    "advantage_at_high_irr": 0.0
+  }
+}
