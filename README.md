@@ -1,11 +1,26 @@
-# 🔍 이주노동자 임금 착취 탐지 시스템
+# WageGuard — 이주노동자 임금 착취 선제 탐지 시스템
 
-> **Liquid Neural Network × 공공 마이크로데이터 기반 선제 탐지**
+> Proactive wage-exploitation detection for migrant workers using Korean public microdata and AI (XGBoost · LNN · PyOD ensemble)
+
+국내 약 90만 이주노동자의 임금 착취를 **신고 이전 단계에** 공공 마이크로데이터와 AI로 선제 탐지하고, 근로감독 점검 우선순위를 제안하는 시스템입니다.
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red)](https://pytorch.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-green)](https://streamlit.io)
 [![Data](https://img.shields.io/badge/Data-MDIS_491만건-orange)](https://mdis.kostat.go.kr)
+
+---
+
+## 공모전 제출 (제5회 고용노동 공공데이터·AI 활용)
+
+- **아이디어 제안서 (양식 일치, 즉시 제출 가능)**: [`PROPOSAL.md`](./PROPOSAL.md) — 표지·1)~6) 본문·이미지 4종(`results/*.png` 임베드)·출품 정보까지 자가완결.
+  - **PDF 빌드(권장, A4 8쪽)**: `python scripts/build_proposal_pdf.py` → `PROPOSAL.pdf`(약 0.95 MB) · `PROPOSAL.html` 자동 생성. Windows 기본 Edge headless 렌더링, 추가 외부 도구 불필요(`pip install markdown`만 있으면 됨).
+  - 그 외 옵션: VS Code *Markdown PDF* 확장, [Pandoc](https://pandoc.org) `pandoc PROPOSAL.md -o PROPOSAL.pdf`, Typora 등.
+- **자가점검·데이터 명세 정리**: [`CONTEST.md`](./CONTEST.md) — 폼 입력 가이드, 주최·주관 포털 연계 표, `활용 AI명` 기타 예시 등.
+- **핵심 공공데이터(가점 대상)**:
+  - 한국고용정보원(주관) — [외국인근로자 근무현황](https://www.data.go.kr/data/15105236/fileData.do), [EIS 고용행정통계](https://eis.work24.go.kr), [워크피디아 임금체계 통계](https://wagework.go.kr/pt/c/b/retrieveWageSytmStcs.do) → 공모 **가점 “나” (2점) 부합**
+  - 고용노동부(주최) — [임금체불 사업주 명단](https://www.moel.go.kr/info/defaulter/defaulterList.do), [근로사건 현황](https://www.data.go.kr/data/15068752/fileData.do), [노동포털 임금체불 통계](https://labor.moel.go.kr/arrstat/arrstat_list.do), [고용형태별근로실태조사 개방판](https://www.data.go.kr/data/3069915/fileData.do)
+- **보조 데이터**: 통계청 [MDIS](https://mdis.kostat.go.kr) 마이크로데이터(미시 라벨링·이주노동자 보정).
 
 ---
 
@@ -50,7 +65,7 @@ C. 초과근무 착취   →  0.1% (초과근무 20h+ && 초과급여=0)
 ## 프로젝트 구조
 
 ```
-project-C/
+WageGuard/
 ├── data/
 │   ├── raw/                    # 실제 MDIS 공공 데이터
 │   │   ├── 총괄_*_데이터/      # 고용형태별근로실태조사 (491만건)
@@ -60,6 +75,7 @@ project-C/
 │   └── processed/              # 전처리된 ML 피처
 │
 ├── utils/
+│   ├── contest_data_sources.py # 공모전 기관 URL·AI 스택 상수
 │   ├── real_data_processor.py  # 실제 데이터 로딩 + 착취 라벨
 │   ├── data_generator.py       # 합성 시계열 생성 (LNN용)
 │   ├── network_analysis.py     # NetworkX 이분 그래프
@@ -76,6 +92,9 @@ project-C/
 ├── dashboard/
 │   └── app.py                  # Streamlit 대시보드
 │
+├── PROPOSAL.md                 # 공모전 아이디어 제안서 본문 (양식 일치)
+├── CONTEST.md                  # 공모전 자가점검·데이터/AI 정리 메모
+│
 ├── results/
 │   ├── pipeline_results.json   # 학습 결과
 │   ├── lnn_experiment_summary.json
@@ -89,6 +108,8 @@ project-C/
 
 ## 빠른 시작
 
+> MDIS 마이크로데이터를 보유하지 않은 경우, `--quick --sample 0.03` 플래그로 합성 데이터 기반 파이프라인을 즉시 재현할 수 있습니다. 전체 491만 건 학습 결과는 `results/pipeline_results.json`에서 확인하세요.
+
 ### 1. 설치
 
 ```bash
@@ -98,10 +119,10 @@ pip install -r requirements.txt
 ### 2. 모델 학습
 
 ```bash
-# 빠른 테스트 (3% 샘플)
+# 빠른 테스트 (3% 샘플, MDIS 없이도 동작)
 python models/train_pipeline.py --quick --sample 0.03
 
-# 전체 학습 (전체 데이터)
+# 전체 학습
 python models/train_pipeline.py --sample 0.3
 ```
 
@@ -115,6 +136,14 @@ python experiments/lnn_vs_lstm_experiment.py
 
 ```bash
 streamlit run dashboard/app.py
+```
+
+### 5. 공모전 제안서 PDF 생성
+
+```bash
+# Windows Edge headless 사용 (pip install markdown 필요)
+python scripts/build_proposal_pdf.py
+# → PROPOSAL.pdf 생성
 ```
 
 ---
