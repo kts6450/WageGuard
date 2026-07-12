@@ -33,3 +33,14 @@ env/
 # IDE
 .cursor/
 .vscode/
+
+# 대용량·재현가능 공개 데이터 (fetch 스크립트로 재생성)
+data/public/
+
+# 운영 피드백 DB (로컬)
+data/ops_feedback.db
+
+# 발표 전략 문서 (비공개)
+발표_각본_10분.md
+발표_액션플랜.md
+_구버전_제출금지_WageGuard.pptx

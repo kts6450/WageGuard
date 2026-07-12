@@ -304,7 +304,7 @@ def get_migrant_risk_features() -> dict:
                 income_sat = pd.to_numeric(df_m["본인소득_만족도코드"], errors="coerce")
                 risk["income_dissatisfaction_rate"] = float((income_sat >= 4).mean())
 
-    # E9 부가항목: 계약 미인지율, 이직 횟수
+    # E9 부가항목: 계약-현실 괴리 지표, 이직 횟수
     e9_dir = os.path.join(RAW_DIR, "부가항목(비전문취업)_20260329_28455_데이터")
     if os.path.exists(e9_dir):
         dfs = []
@@ -315,7 +315,16 @@ def get_migrant_risk_features() -> dict:
             df_e9 = pd.concat(dfs, ignore_index=True)
             if "근로계약조건_인지여부" in df_e9.columns:
                 contract = pd.to_numeric(df_e9["근로계약조건_인지여부"], errors="coerce")
-                risk["e9_contract_unknown_rate"] = float((contract != 1).mean())
+                # 코드북: 1=계약조건 알고 있음, 2=모름, 3=계약서 없음
+                # 주의: 과거 `contract != 1`은 코드 2·3과 결측(NaN)까지 모두 '모름'으로
+                #       과대 집계하여 미인지율을 66%로 부풀리는 버그였음. 고용허가제상
+                #       표준근로계약 체결을 감안하면 실제 '모름(코드 2)' 비율은 훨씬 낮다.
+                valid = contract.dropna()
+                if len(valid) > 0:
+                    # 실제 '계약조건 모름'만 집계 (결측 제외)
+                    risk["e9_contract_unknown_rate"] = float((valid == 2).mean())
+                    # 계약서 자체가 없는 비율 (별도 위험 신호)
+                    risk["e9_no_contract_rate"] = float((valid == 3).mean())
             if "취업후직장이직횟수구간코드" in df_e9.columns:
                 turnover = pd.to_numeric(df_e9["취업후직장이직횟수구간코드"], errors="coerce")
                 risk["e9_high_turnover_rate"] = float((turnover >= 3).mean())

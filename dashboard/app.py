@@ -15,6 +15,8 @@ from plotly.subplots import make_subplots
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
+from utils.contest_data_sources import contest_expander_markdown
+
 st.set_page_config(
     page_title="임금 착취 탐지 시스템",
     page_icon="🔍",
@@ -65,6 +67,9 @@ def render_header():
         </p>
     </div>
     """, unsafe_allow_html=True)
+
+    with st.expander("제5회 고용노동 공공데이터·AI 활용 공모전 — 데이터·AI 출처 요약"):
+        st.markdown(contest_expander_markdown())
 
 
 def render_kpi(df: pd.DataFrame, results: dict):

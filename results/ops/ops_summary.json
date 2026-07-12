@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-07-12 04:08",
+  "nps_snapshot": "2026-05",
+  "workplaces": 539964,
+  "insured": 11182333,
+  "n_cells": 1873,
+  "min_insured_per_cell": 500,
+  "defaulters_mapped": 767,
+  "validation_all": {
+    "covered_defaulters": 685,
+    "top10": {
+      "cells": 187,
+      "capture": 0.2015,
+      "insured_share": 0.0407,
+      "lift": 4.95
+    },
+    "top20": {
+      "cells": 375,
+      "capture": 0.3445,
+      "insured_share": 0.0845,
+      "lift": 4.08
+    }
+  },
+  "validation_future": {
+    "covered_defaulters": 200,
+    "top10": {
+      "cells": 187,
+      "capture": 0.19,
+      "insured_share": 0.0407,
+      "lift": 4.67
+    },
+    "top20": {
+      "cells": 375,
+      "capture": 0.32,
+      "insured_share": 0.0845,
+      "lift": 3.79
+    }
+  }
+}

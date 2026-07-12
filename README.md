@@ -1,8 +1,8 @@
-# WageGuard — 이주노동자 임금 착취 선제 탐지 시스템
+# WageGuard — 이주노동자 임금 착취 위험 스크리닝 시스템
 
-> Proactive wage-exploitation detection for migrant workers using Korean public microdata and AI (XGBoost · LNN · PyOD ensemble)
+> Wage-exploitation risk screening for migrant workers using Korean public microdata and AI (XGBoost · LNN · PyOD ensemble)
 
-국내 약 90만 이주노동자의 임금 착취를 **신고 이전 단계에** 공공 마이크로데이터와 AI로 선제 탐지하고, 근로감독 점검 우선순위를 제안하는 시스템입니다.
+국내 외국인 취업자 110만 9천 명(통계청 2025, 역대 최고)의 임금 착취 위험을 **신고 이전 단계에** 공공 행정데이터와 AI로 시도·시군구×업종 셀 단위 스크리닝하고, 근로감독 점검 우선순위를 제안하는 시스템입니다. 개별 사업장을 지목하지 않습니다.
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red)](https://pytorch.org)
@@ -26,17 +26,40 @@
 
 ## 프로젝트 개요
 
-국내 약 90만 이주노동자의 임금 착취를 **피해자 신고 없이** 공공 마이크로데이터만으로 선제 탐지하는 ML 시스템입니다.
+국내 외국인 취업자 110만 9천 명의 임금 착취 위험을 **피해자 신고 없이** 공공 행정데이터만으로 셀 단위 스크리닝하는 ML 시스템입니다.
 
-### 핵심 성과
+### 핵심 성과 (전면 공개 데이터 실증 — 2026-07 재구축)
 
 | 지표 | 결과 |
 |------|------|
-| 분석 데이터 | **491만 6,667건** (통계청 MDIS, 2020~2024) |
-| 실제 착취 비율 | **6.7%** (3조건 복합 라벨) |
-| XGBoost AUROC | **0.9998 ± 0.0001** (5-Fold CV) |
-| LNN 3개월 조기탐지 | **AUROC 0.9957** (LSTM 0.9900 대비 +0.57%) |
-| LNN 수렴 속도 | LSTM 대비 **25% 빠름** (에포크 3 vs 4) |
+| 위험 지표 원천 | **국민연금 가입 사업장 54만 곳 실측** (저임금·고이직·영세성 — 체불 정보 미사용) |
+| 외부 검증 | 임금체불 사업주 공개 명단 769명(중복 제거) 매칭 — **상위 10% 셀이 체불 30% 포착: 고용 기준 5.2배 · 사업장 수 기준 2.4배** |
+| 홀드아웃 검증 | 지표 산출에 쓰지 않은 2025~26년 공개분만 채점해도 **4.7배** (순환논리 구조적 차단) |
+| 강건성 | 순열검정 **p=0.006** · 건설업 제외에도 4.0배 · 가중치 200조합 섭동 순위 상관 **0.93** |
+| (보조 연구) MDIS PoC | 491만 건 분석 · 위반 노출률 6.7% 실측 / 초기 AUROC 0.9998은 누수 확인 후 성과에서 제외 |
+| (보조 연구) LNN 조기탐지 | AUROC 0.9957 (LSTM 0.9900) — 합성 시계열 시뮬레이션 기준 |
+
+### 실행 — 운영 시스템 (실사용)
+
+```bash
+pip install -r requirements.txt
+python scripts/refresh_all.py            # 수집→재계산→이력 적재 (매월 1회)
+streamlit run dashboard/ops_app.py       # 감독관용 운영 앱
+```
+
+**감독관 워크플로**: 관할(시도·시군구) 선택 → 시군구×업종 셀 1,873개 중 관할 우선순위 확인(근거 신호 포함) → **점검 계획서 CSV 발급** → 현장 점검 → **결과 입력(SQLite) → 명중률 자동 집계·재보정**. 시군구 해상도에서도 검증 유지: 위험 상위 10% 셀이 체불 명단 20% 포착(무작위 4.9배, 미래 차수 4.7배).
+
+월별 자동 갱신(Windows 작업 스케줄러):
+
+```bat
+schtasks /Create /TN "WageGuard 갱신" /SC MONTHLY /D 1 /ST 07:00 /TR "python <repo>\scripts\refresh_all.py"
+```
+
+### 실행 — 실증·검증 대시보드 (발표 시연)
+
+```bash
+streamlit run dashboard/screening_app.py
+```
 
 ---
 
@@ -154,7 +177,7 @@ python scripts/build_proposal_pdf.py
 |----|------|
 | 📊 실제 데이터 분석 | 491만건 착취 패턴, 산업별/고용형태별 분포 |
 | 🤖 모델 성능 비교 | XGBoost vs LNN vs LSTM AUROC/F1 |
-| 🌏 E9 이주노동자 | 계약 인지율, 이직 패턴, 연도별 추이 |
+| 🌏 E9 이주노동자 | 계약–현실 괴리·계약서 미보유, 이직 패턴, 연도별 추이 |
 | ⚙️ 파이프라인 실행 | 대시보드 내 학습 실행 |
 
 ---

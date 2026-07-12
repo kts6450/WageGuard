@@ -1,0 +1,140 @@
+{
+  "inputs": {
+    "nps_workplaces": 540069,
+    "nps_insured": 11184275,
+    "nps_snapshot": "2026-05",
+    "defaulters_total": 767,
+    "defaulters_future_rounds": 225,
+    "n_cells": 207,
+    "min_insured_per_cell": 3000
+  },
+  "unsupervised_vs_all": {
+    "label": "unsup_all",
+    "total_defaulters": 709,
+    "n_cells": 207,
+    "top10": {
+      "cells": 21,
+      "capture": 0.2962,
+      "insured_share": 0.057,
+      "lift": 5.19
+    },
+    "top20": {
+      "cells": 41,
+      "capture": 0.385,
+      "insured_share": 0.101,
+      "lift": 3.81
+    },
+    "top30": {
+      "cells": 62,
+      "capture": 0.4006,
+      "insured_share": 0.1385,
+      "lift": 2.89
+    },
+    "spearman_risk_vs_rate": 0.372
+  },
+  "unsupervised_vs_future": {
+    "label": "unsup_future",
+    "total_defaulters": 207,
+    "n_cells": 207,
+    "top10": {
+      "cells": 21,
+      "capture": 0.2657,
+      "insured_share": 0.057,
+      "lift": 4.66
+    },
+    "top20": {
+      "cells": 41,
+      "capture": 0.3478,
+      "insured_share": 0.101,
+      "lift": 3.44
+    },
+    "top30": {
+      "cells": 62,
+      "capture": 0.3671,
+      "insured_share": 0.1385,
+      "lift": 2.65
+    },
+    "spearman_risk_vs_rate": 0.2036
+  },
+  "weight_sensitivity": {
+    "n_perturb": 200,
+    "rho_mean": 0.9276,
+    "rho_min": 0.7424
+  },
+  "supervised_temporal": {
+    "label": "supervised_future_rounds",
+    "total_defaulters": 207,
+    "n_cells": 207,
+    "top10": {
+      "cells": 21,
+      "capture": 0.3961,
+      "insured_share": 0.0887,
+      "lift": 4.46
+    },
+    "top20": {
+      "cells": 41,
+      "capture": 0.4783,
+      "insured_share": 0.1175,
+      "lift": 4.07
+    },
+    "top30": {
+      "cells": 62,
+      "capture": 0.57,
+      "insured_share": 0.2892,
+      "lift": 1.97
+    },
+    "spearman_risk_vs_rate": 0.362,
+    "coef": {
+      "저임금": -0.358,
+      "이직률": 1.002,
+      "영세비중": 0.295
+    }
+  },
+  "migrant_focus": {
+    "e9_total_mfg": 226619,
+    "e9_top_subsectors": [
+      {
+        "name": "금속가공제품 제조업; 기계 및 가구 제외",
+        "workers": 41887
+      },
+      {
+        "name": "고무 및 플라스틱제품 제조업",
+        "workers": 29549
+      },
+      {
+        "name": "식료품 제조업",
+        "workers": 24842
+      },
+      {
+        "name": "기타 기계 및 장비 제조업",
+        "workers": 21194
+      },
+      {
+        "name": "자동차 및 트레일러 제조업",
+        "workers": 19533
+      }
+    ],
+    "mfg_top_risk_cells": [
+      {
+        "sido": "제주",
+        "risk": 0.369
+      },
+      {
+        "sido": "강원",
+        "risk": -0.185
+      },
+      {
+        "sido": "전북",
+        "risk": -0.383
+      },
+      {
+        "sido": "전남",
+        "risk": -0.414
+      },
+      {
+        "sido": "부산",
+        "risk": -0.475
+      }
+    ]
+  }
+}
