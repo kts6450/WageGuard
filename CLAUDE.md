@@ -15,7 +15,8 @@ python scripts/refresh_all.py --skip-fetch # 재계산만
 streamlit run dashboard/ops_app.py         # 감독관용 운영 앱 (실사용)
 streamlit run dashboard/screening_app.py   # 검증·시연 앱 (발표용)
 
-python scripts/build_presentation.py       # WageGuard_발표.pptx 재생성
+python scripts/build_presentation.py       # WageGuard_발표.pptx 재생성 (python-pptx 네이티브 덱)
+python scripts/render_html_deck.py          # HTML 디자인 원본(play.html) → pptx 재렌더링 (headless Chrome, 2x)
 python scripts/build_proposal_pdf.py       # PROPOSAL.html/pdf 재생성
 python scripts/audit_validation.py         # 검증 수치 적대적 감사
 python scripts/audit_deck_layout.py        # PPT 텍스트 오버플로 감사
@@ -62,4 +63,5 @@ python scripts/audit_deck_layout.py        # PPT 텍스트 오버플로 감사
 
 - `data/public/`(대용량 원자료), `data/ops_feedback.db`(점검 피드백), 발표 각본·전략 문서는 **gitignore — 커밋 금지**
 - 문서 수정 시 재빌드 필수: PROPOSAL.md 수정 → `build_proposal_pdf.py`, 발표 내용 수정 → `build_presentation.py`
+- **HTML 디자인 덱**(발표 정본): 원본은 저장소 밖 `play.html`(+`assets/`, 각 슬라이드가 `SLIDES` 배열의 완결형 HTML). 편집은 `play.html`에서 하고 `render_html_deck.py`로 pptx 재생성. `--src`/`--out`으로 경로 지정. 시스템 Chrome 사용(추가 설치 불필요).
 - 수치가 바뀌는 변경(파이프라인 수정) 후에는 반드시 `audit_validation.py`를 다시 돌리고 PPT·문서·앱의 하드코딩 수치를 동기화할 것
